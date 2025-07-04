@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قوانین استفاده</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0e1c36;
+      color: white;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-bottom: 0;
+      box-shadow: 0 0 20px #00ffff80;
+      object-fit: cover;
+    }
+    .box {
+      background: #1a2d4a;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ffff40;
+      max-width: 500px;
+      text-align: center;
+      width: 100%;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+    }
+    .yes {
+      background: #00c3ff;
+    }
+    .no {
+      background: #ff4d4d;
+    }
+    .message-box {
+      background: #1a2d4a;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ffff40;
+      padding: 30px;
+      text-align: center;
+      font-size: 20px;
+      max-width: 400px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://poyan77.alfahost.sbs/file.png" alt="Bot Profile" class="profile-img" />
+  <p style="color: white; margin: 10px 0 20px 0; font-size: 20px; font-weight: bold;">🍔 food center 🍔</p>
+
+  <div id="content">
+    <div class="box" id="rulesBox">
+      <h2>📜قوانین استفاده از ربات فود سنتر 👇</h2>
+      <p>📌مبالغ واریزی فقط برای خرید محصولات ربات هستند✅</p>
+      <p>📌موجودی ربات قابل برگشت یا انتقال نیست ✅</p>
+      <p>📌قبل از واریز و خرید از تصمیم خود اطمینان حاصل کنید ✅</p>
+      <p>📌بی ادبی = بن دائم از ربات ✅</p>
+      <p>📌سو استفاده ، فیش جعلی ، هویت جعلی و.... = بن از ربات ✅</p>
+      <p>👤برای رفع مشکلات خود به پشتیبانی ربات مراجعه کنید🙂</p>
+      <br />
+      <p>با تشکر ، فود سنتر 🌹</p>
+      <button class="yes" id="acceptBtn">✅ قوانین را می‌پذیرم</button>
+      <button class="no" id="rejectBtn">❌ رد می‌کنم</button>
+    </div>
+  </div>
+
+  <script>
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+    }
+
+    async function sendData(status) {
+      return new Promise((resolve, reject) => {
+        try {
+          Telegram.WebApp.sendData(status);
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    document.getElementById("acceptBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("acceptBtn");
+      btn.innerText = "⏳ در حال پردازش...";
+      btn.disabled = true;
+
+      try {
+        await sendData("accepted");
+
+        document.getElementById("content").innerHTML = `
+          <div class="message-box">✅ قوانین پذیرفته شد، خرید خوبی داشته باشید ❤️</div>
+        `;
+      } catch (err) {
+        console.error("❌ خطا در ارسال:", err);
+        btn.innerText = "❌ ارسال ناموفق، دوباره تلاش کن";
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("rejectBtn").addEventListener("click", () => {
+      try {
+        Telegram.WebApp.sendData("rejected");
+        document.getElementById("content").innerHTML = `
+          <div class="message-box" style="box-shadow: 0 0 20px #ff4d4d;">
+            ❌ قوانین رد شد، نمی‌توانید از ربات استفاده کنید ❌
+          </div>
+        `;
+      } catch (err) {
+        console.error("❌ ارسال رد ناموفق:", err);
+      }
+    });
+  </script>
+</body>
+</html>
